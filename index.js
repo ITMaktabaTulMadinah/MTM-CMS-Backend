@@ -25,10 +25,10 @@ const server = http.createServer(app);
 
 // ✅ Create Socket.IO server
 export const io = new Server(server, {
-	cors: {
-		origin: ["http://localhost:5173"],
-		methods: ["GET", "POST"],
-	},
+  cors: {
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "POST"],
+  },
 });
 
 // Middlewares
@@ -41,45 +41,45 @@ const onlineUsers = new Map();
 
 // ✅ Socket.IO Events
 io.on("connection", (socket) => {
-	console.log("Socket connected:", socket.id);
+  console.log("Socket connected:", socket.id);
 
-	const userId = socket.handshake.query.userId;
+  const userId = socket.handshake.query.userId;
 
-	if (userId) {
-		onlineUsers.set(userId, socket.id);
-		io.emit("onlineUsers", Array.from(onlineUsers.keys()));
-		console.log("User Online:", userId);
-	}
+  if (userId) {
+    onlineUsers.set(userId, socket.id);
+    io.emit("onlineUsers", Array.from(onlineUsers.keys()));
+    console.log("User Online:", userId);
+  }
 
-	socket.on("joinRoom", (room) => {
-		socket.join(room);
-	});
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+  });
 
-	socket.on("typing", (data) => {
-		io.to(data.room).emit("typing", data);
-	});
+  socket.on("typing", (data) => {
+    io.to(data.room).emit("typing", data);
+  });
 
-	socket.on("newMessage", (data) => {
-		console.log("New message received:", data);
-		io.to(data.room).emit("newMessage", data.message);
-	});
+  socket.on("newMessage", (data) => {
+    console.log("New message received:", data);
+    io.to(data.room).emit("newMessage", data.message);
+  });
 
-	socket.on("disconnect", () => {
-		onlineUsers.forEach((value, key) => {
-			if (value === socket.id) {
-				onlineUsers.delete(key);
-				io.emit("onlineUsers", Array.from(onlineUsers.keys()));
-				console.log("User Offline:", key);
-			}
-		});
+  socket.on("disconnect", () => {
+    onlineUsers.forEach((value, key) => {
+      if (value === socket.id) {
+        onlineUsers.delete(key);
+        io.emit("onlineUsers", Array.from(onlineUsers.keys()));
+        console.log("User Offline:", key);
+      }
+    });
 
-		console.log("Socket disconnected:", socket.id);
-	});
+    console.log("Socket disconnected:", socket.id);
+  });
 });
 
 // Routes
 app.get("/", (req, res) => {
-	res.send("Complaint Management System API is running 🚀");
+  res.send("Complaint Management System API is running 🚀");
 });
 
 app.use("/api/auth", authRoutes);
@@ -90,14 +90,14 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.get("/api/test", (req, res) => {
-	res.send("Proxy Working ✅");
+  res.send("Proxy Working ✅");
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 connectDB().then(() => {
-	server.listen(PORT, () => {
-		// ✅ FIXED!
-		console.log(`🌐 Server with socket.io running on port ${PORT}`);
-	});
+  server.listen(PORT, () => {
+    // ✅ FIXED!
+    console.log(`🌐 Server with socket.io running on port ${PORT}`);
+  });
 });
