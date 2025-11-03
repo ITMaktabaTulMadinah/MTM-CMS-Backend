@@ -4,44 +4,47 @@ import cors from "cors";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import http from "http";
+import { Server } from "socket.io";
+import connectDB from "./src/config/db.js";
+import { socketAuth } from "./src/middlewares/socketAuth.js";
 
 // Route imports
 import authRoutes from "./src/routes/authRoutes.js";
 import complaintRoutes from "./src/routes/complaintRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 
-// Middleware imports
-import { notFound, errorHandler } from "./src/middlewares/errorMiddleware.js";
-import connectDB from "./src/config/db.js";
-import { Server } from "socket.io";
-import { socketAuth } from "./src/middlewares/socketAuth.js";
-
 dotenv.config();
 
 const app = express();
-
-// ✅ Create HTTP server
 const server = http.createServer(app);
 
-// ✅ Create Socket.IO server
-export const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-
-// Middlewares
-app.use(express.json());
+// ✅ MUST be before routes & JSON middleware
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "https://mtm-cms-frontend.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
+// ✅ Handle preflight requests
+app.options("*", cors());
+
+// Middlewares
+app.use(express.json());
 app.use(morgan("dev"));
+
+// ✅ Socket Server
+export const io = new Server(server, {
+  cors: {
+    origin: "https://mtm-cms-frontend.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  },
+});
+
 io.use(socketAuth);
 
 const onlineUsers = new Map();
