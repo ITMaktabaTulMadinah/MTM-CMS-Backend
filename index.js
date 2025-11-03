@@ -35,7 +35,7 @@ export const io = new Server(server, {
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://mtm-cms-frontend.vercel.app",
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
