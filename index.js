@@ -21,16 +21,12 @@ const server = http.createServer(app);
 // ✅ MUST be before routes & JSON middleware
 app.use(
   cors({
-    origin: "https://mtm-cms-frontend.vercel.app",
+    origin: ["https://mtm-cms-frontend.vercel.app", "http://115.42.74.50:7861"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
-
-// ✅ Handle preflight requests
-app.options("*", cors());
-
 // Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
@@ -38,7 +34,7 @@ app.use(morgan("dev"));
 // ✅ Socket Server
 export const io = new Server(server, {
   cors: {
-    origin: "https://mtm-cms-frontend.vercel.app",
+    origin: ["https://mtm-cms-frontend.vercel.app", "http://115.42.74.50:7861"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -96,8 +92,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+// app.use(notFound);
+// app.use(errorHandler);
 
 app.get("/api/test", (req, res) => {
   res.send("Proxy Working ✅");
