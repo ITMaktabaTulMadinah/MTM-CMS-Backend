@@ -21,7 +21,11 @@ const server = http.createServer(app);
 // ✅ MUST be before routes & JSON middleware
 app.use(
   cors({
-    origin: ["https://mtm-cms-frontend.vercel.app", "http://115.42.74.50:7861"],
+    origin: [
+      "https://mtm-cms-frontend.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -34,10 +38,14 @@ app.use(morgan("dev"));
 // ✅ Socket Server
 export const io = new Server(server, {
   cors: {
-    origin: ["https://mtm-cms-frontend.vercel.app", "http://115.42.74.50:7861"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: [
+      "https://mtm-cms-frontend.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST"],
     credentials: true,
+    transports: ["websocket", "polling"],
   },
 });
 
