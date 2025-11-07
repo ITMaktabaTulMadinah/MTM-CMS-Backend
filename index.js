@@ -25,6 +25,7 @@ app.use(
       "https://mtm-cms-frontend.vercel.app",
       "http://localhost:3000",
       "http://localhost:5173",
+      "https://mtm-cms-backend-production.up.railway.app",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -41,6 +42,7 @@ export const io = new Server(server, {
     origin: [
       "https://mtm-cms-frontend.vercel.app",
       "http://localhost:3000",
+      "https://mtm-cms-backend-production.up.railway.app",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST"],
